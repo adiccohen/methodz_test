@@ -15,131 +15,120 @@ import {
   FormControl,
   SelectChangeEvent,
 } from "@mui/material";
-
-interface Field {
-  name: string;
-  type: "string" | "num";
-  offsetFrom: number;
-  offsetTo: number;
-  description: string;
-}
+import { useSelector, useDispatch } from "react-redux";
+import { RootState, AppDispatch } from "./app/store";
+import { addField, Field } from "./features/fields/fieldsSlice";
+import { Formik, Form, Field as FormikField } from "formik";
 
 const App = () => {
-  const [fields, setFields] = useState<Field[]>([]);
+  const dispatch = useDispatch<AppDispatch>();
+  const fields = useSelector((state: RootState) => state.fields.fields);
+
   const [isModalOpen, setModalOpen] = useState(false);
 
-  const [formData, setFormData] = useState<Field>({
-    name: "",
-    type: "string",
-    offsetFrom: 0,
-    offsetTo: 0,
-    description: "",
-  });
+  
 
-  const handleTextChange = (
-    e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: name === "offsetFrom" || name === "offsetTo" ? Number(value) : value,
-    }));
-  };
-
-  const handleSelectChange = (e: SelectChangeEvent) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value as "string" | "num",
-    }));
-  };
-
-  const handleAddField = () => {
-    setFields(prev => [...prev, formData]);
-    setFormData({
-      name: "",
-      type: "string",
-      offsetFrom: 0,
-      offsetTo: 0,
-      description: "",
-    });
-    setModalOpen(false);
-  };
-
+  
   return (
     <div style={{ padding: 20 }}>
       <Typography variant="h4" gutterBottom>
         Field Editor
       </Typography>
 
-      <Button variant="contained" color="primary" onClick={() => setModalOpen(true)}>
+      <Button
+        variant="contained"
+        color="primary"
+        onClick={() => setModalOpen(true)}
+      >
         + Add Field
       </Button>
 
       {/* Modal */}
       <Dialog open={isModalOpen} onClose={() => setModalOpen(false)}>
         <DialogTitle>New Field</DialogTitle>
-        <DialogContent>
 
-          <TextField
-            label="Field Name"
-            name="name"
-            fullWidth
-            margin="dense"
-            value={formData.name}
-            onChange={handleTextChange}
-          />
+        {/* ✅ Formik replaces manual form handling */}
+        <Formik
+          initialValues={{
+            name: "",
+            type: "string" as "string" | "num",
+            offsetFrom: 0,
+            offsetTo: 0,
+            description: "",
+          }}
+          onSubmit={(values, { resetForm }) => {
+            dispatch(addField(values));
+            setModalOpen(false);
+            resetForm();
+          }}
+        >
+          {({ values, handleChange }) => (
+            <Form>
+              <DialogContent>
+                <TextField
+                  label="Field Name"
+                  name="name"
+                  fullWidth
+                  margin="dense"
+                  value={values.name}
+                  onChange={handleChange}
+                />
 
-          <FormControl fullWidth margin="dense">
-            <InputLabel>Type</InputLabel>
-            <Select
-              label="Type"
-              name="type"
-              value={formData.type}
-              onChange={handleSelectChange}
-            >
-              <MenuItem value="string">String</MenuItem>
-              <MenuItem value="num">Num</MenuItem>
-            </Select>
-          </FormControl>
+                <FormControl fullWidth margin="dense">
+                  <InputLabel>Type</InputLabel>
+                  <Select
+                    label="Type"
+                    name="type"
+                    value={values.type}
+                    onChange={handleChange}
+                  >
+                    <MenuItem value="string">String</MenuItem>
+                    <MenuItem value="num">Num</MenuItem>
+                  </Select>
+                </FormControl>
 
-          <Box display="flex" gap={2} mt={1}>
-            <TextField
-              label="Offset From"
-              name="offsetFrom"
-              type="number"
-              margin="dense"
-              value={formData.offsetFrom}
-              onChange={handleTextChange}
-              fullWidth
-            />
-            <TextField
-              label="Offset To"
-              name="offsetTo"
-              type="number"
-              margin="dense"
-              value={formData.offsetTo}
-              onChange={handleTextChange}
-              fullWidth
-            />
-          </Box>
+                <Box display="flex" gap={2} mt={1}>
+                  <TextField
+                    label="Offset From"
+                    name="offsetFrom"
+                    type="number"
+                    margin="dense"
+                    value={values.offsetFrom}
+                    onChange={handleChange}
+                    fullWidth
+                  />
+                  <TextField
+                    label="Offset To"
+                    name="offsetTo"
+                    type="number"
+                    margin="dense"
+                    value={values.offsetTo}
+                    onChange={handleChange}
+                    fullWidth
+                  />
+                </Box>
 
-          <TextField
-            label="Description"
-            name="description"
-            fullWidth
-            margin="dense"
-            multiline
-            rows={2}
-            value={formData.description}
-            onChange={handleTextChange}
-          />
-        </DialogContent>
+                <TextField
+                  label="Description"
+                  name="description"
+                  fullWidth
+                  margin="dense"
+                  multiline
+                  rows={2}
+                  value={values.description}
+                  onChange={handleChange}
+                />
+              </DialogContent>
 
-        <DialogActions>
-          <Button onClick={() => setModalOpen(false)}>Cancel</Button>
-          <Button variant="contained" onClick={handleAddField}>Add</Button>
-        </DialogActions>
+              <DialogActions>
+                <Button onClick={() => setModalOpen(false)}>Cancel</Button>
+                <Button variant="contained" type="submit">
+                  Add
+                </Button>
+              </DialogActions>
+            </Form>
+          )}
+        </Formik>
       </Dialog>
 
       {/* Canvas */}
@@ -147,7 +136,8 @@ const App = () => {
         <Typography variant="h6">Fields</Typography>
         {fields.map((field, index) => (
           <Paper key={index} style={{ padding: 10, marginBottom: 8 }}>
-            <strong>{field.name}</strong> ({field.type}) | Offset: {field.offsetFrom}-{field.offsetTo}
+            <strong>{field.name}</strong> ({field.type}) | Offset:{" "}
+            {field.offsetFrom} - {field.offsetTo}
             <br />
             <em>{field.description}</em>
           </Paper>
