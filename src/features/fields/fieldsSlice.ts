@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { fetchFields } from './fieldsThunks';
 
 export interface Field {
   name: string;
@@ -29,6 +30,11 @@ const fieldsSlice = createSlice({
     clearFields(state) {
       state.fields = [];
     },
+  },
+  extraReducers: (builder) => {
+    builder.addCase(fetchFields.fulfilled, (state, action) => {
+      state.fields = action.payload;
+    });
   },
 });
 
