@@ -1,34 +1,23 @@
-import express from 'express';
-import cors from 'cors';
+import express from "express";
+import cors from "cors";
 
 const app = express();
-const port = 4000;
+const PORT = 4000;
 
 app.use(cors());
 app.use(express.json());
 
-interface Field {
-  name: string;
-  type: 'string' | 'num';
-  offsetFrom: number;
-  offsetTo: number;
-  description: string;
-}
+let fields: any[] = []; // 🧠 simple in-memory store for now
 
-// In-memory mock "database"
-let fields: Field[] = [];
-
-// GET /fields
-app.get('/fields', (req, res) => {
+app.get("/fields", (req, res) => {
   res.json(fields);
 });
 
-// POST /fields
-app.post('/fields', (req, res) => {
+app.post("/fields", (req, res) => {
   fields = req.body;
-  res.json({ message: 'Fields saved successfully' });
+  res.json({ message: "Fields saved successfully" });
 });
 
-app.listen(port, () => {
-  console.log(`Mock API server running at http://localhost:${port}`);
+app.listen(PORT, () => {
+  console.log(`✅ Server running at http://localhost:${PORT}`);
 });
