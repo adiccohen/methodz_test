@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Button,
   Dialog,
@@ -13,33 +13,30 @@ import {
   Select,
   InputLabel,
   FormControl,
-  SelectChangeEvent,
 } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "./app/store";
 import { addField, Field } from "./features/fields/fieldsSlice";
-import { Formik, Form, Field as FormikField } from "formik";
+import { Formik, Form } from "formik";
+import { fetchFields, saveFields } from "./features/fields/fieldsThunks"; // <-- Add saveFields import here
 
 const App = () => {
   const dispatch = useDispatch<AppDispatch>();
   const fields = useSelector((state: RootState) => state.fields.fields);
 
+  useEffect(() => {
+    dispatch(fetchFields());
+  }, [dispatch]);
+
   const [isModalOpen, setModalOpen] = useState(false);
 
-  
-
-  
   return (
     <div style={{ padding: 20 }}>
       <Typography variant="h4" gutterBottom>
         Field Editor
       </Typography>
 
-      <Button
-        variant="contained"
-        color="primary"
-        onClick={() => setModalOpen(true)}
-      >
+      <Button variant="contained" color="primary" onClick={() => setModalOpen(true)}>
         + Add Field
       </Button>
 
@@ -47,7 +44,6 @@ const App = () => {
       <Dialog open={isModalOpen} onClose={() => setModalOpen(false)}>
         <DialogTitle>New Field</DialogTitle>
 
-        {/* ✅ Formik replaces manual form handling */}
         <Formik
           initialValues={{
             name: "",
@@ -57,7 +53,9 @@ const App = () => {
             description: "",
           }}
           onSubmit={(values, { resetForm }) => {
+            const newFields = [...fields, values];
             dispatch(addField(values));
+            dispatch(saveFields(newFields)); // <-- Save fields to server
             setModalOpen(false);
             resetForm();
           }}
@@ -136,8 +134,7 @@ const App = () => {
         <Typography variant="h6">Fields</Typography>
         {fields.map((field, index) => (
           <Paper key={index} style={{ padding: 10, marginBottom: 8 }}>
-            <strong>{field.name}</strong> ({field.type}) | Offset:{" "}
-            {field.offsetFrom} - {field.offsetTo}
+            <strong>{field.name}</strong> ({field.type}) | Offset: {field.offsetFrom} - {field.offsetTo}
             <br />
             <em>{field.description}</em>
           </Paper>
