@@ -3,6 +3,7 @@ import {
   Dialog, DialogTitle, DialogContent, DialogActions,
   TextField, Button, FormControl, InputLabel, Select, MenuItem
 } from "@mui/material";
+import { makeStyles } from "@mui/styles";
 import { Formik, Form } from "formik";
 import { Field } from "../fieldsSlice";
 
@@ -12,7 +13,17 @@ interface Props {
   onAdd: (field: Field) => void;
 }
 
+const useStyles = makeStyles({
+  formControl: {
+    marginTop: 8,
+    marginBottom: 8,
+    minWidth: 120,
+  },
+});
+
 const AddFieldModal: React.FC<Props> = ({ open, onClose, onAdd }) => {
+  const classes = useStyles();
+
   return (
     <Dialog open={open} onClose={onClose}>
       <DialogTitle>New Field</DialogTitle>
@@ -41,7 +52,7 @@ const AddFieldModal: React.FC<Props> = ({ open, onClose, onAdd }) => {
                 value={values.name}
                 onChange={handleChange}
               />
-              <FormControl fullWidth margin="dense">
+              <FormControl fullWidth margin="dense" className={classes.formControl}>
                 <InputLabel>Type</InputLabel>
                 <Select name="type" value={values.type} onChange={handleChange} label="Type">
                   <MenuItem value="string">String</MenuItem>

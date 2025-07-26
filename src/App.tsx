@@ -1,50 +1,60 @@
 import React, { useEffect, useState } from "react";
-import {
-  Button,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  TextField,
-  Typography,
-  Box,
-  Paper,
-  MenuItem,
-  Select,
-  InputLabel,
-  FormControl,
-} from "@mui/material";
+import { Button, Typography, Box } from "@mui/material";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "./app/store";
 import { addField, Field } from "./features/fields/fieldsSlice";
-import { Formik, Form } from "formik";
-import Canvas from "./features/fields/components/Canvas";
-import { fetchFields, saveFields } from "./features/fields/fieldsThunks"; // <-- Add saveFields import here
+import { fetchFields, saveFields } from "./features/fields/fieldsThunks";
 import AddFieldModal from "./features/fields/components/AddFieldModal";
+import Canvas from "./features/fields/components/Canvas";
 import Editor from "./features/fields/components/Editor";
+import { makeStyles } from "@mui/styles";
+
+const useStyles = makeStyles({
+  root: {
+    padding: 20,
+  },
+  header: {
+    marginBottom: 20,
+  },
+  addButton: {
+    marginBottom: 16,
+  },
+});
 
 const App = () => {
+  const classes = useStyles();
   const dispatch = useDispatch<AppDispatch>();
   const fields = useSelector((state: RootState) => state.fields.fields);
+  const [isModalOpen, setModalOpen] = useState(false);
 
   useEffect(() => {
     dispatch(fetchFields());
   }, [dispatch]);
 
-  const [isModalOpen, setModalOpen] = useState(false);
-
   return (
-    <div style={{ padding: 20 }}>
-      <Typography variant="h4" gutterBottom>
-        Field Editor
+    <Box className={classes.root}>
+      <Typography
+        variant="h4"
+        fontWeight="bold"
+        color="#ff69b4" // Same pink
+        textAlign="center"
+        sx={{ mt: 3, mb: 2 }}
+      >
+        Header Analysis
       </Typography>
 
       <Button
         variant="contained"
-        color="primary"
         onClick={() => setModalOpen(true)}
+        className={classes.addButton}
+        style={{
+          fontSize: 24,
+          padding: "6px 16px",
+          backgroundColor: "#f8bbd0", // light pink
+          color: "#880e4f", // darker pink text for contrast
+        }}
       >
-        + Add Field
+        +
       </Button>
 
       <AddFieldModal
@@ -56,10 +66,19 @@ const App = () => {
           dispatch(saveFields(newFields));
         }}
       />
-      <Canvas fields={fields} />
 
-      <Editor />
-    </div>
+      <Box display="flex" gap={3} mt={4}>
+        {/* Left side: Canvas */}
+        <Box flex={1}>
+          <Canvas fields={fields} />
+        </Box>
+
+        {/* Right side: Editor */}
+        <Box flex={1}>
+          <Editor />
+        </Box>
+      </Box>
+    </Box>
   );
 };
 
