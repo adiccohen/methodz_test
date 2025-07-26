@@ -1,12 +1,12 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: AWS::Serverless-2016-10-31
 Resources:
-  ExpressApiFunction:
+  fieldsEditorService:
     Type: AWS::Serverless::Function
     Properties:
       Handler: dist/lambda.handler
       Runtime: nodejs18.x
-      CodeUri: ExpressApiFunction
+      CodeUri: fieldsEditorService
       MemorySize: 1024
       Timeout: 11
       Policies:
@@ -32,9 +32,9 @@ Resources:
             Path: /{proxy+}
             Method: ANY
     Metadata:
-      SamResourceId: ExpressApiFunction
+      SamResourceId: fieldsEditorService
 Outputs:
-  ExpressApiFunctionApi:
+  fieldsEditorApi:
     Description: ' API Gateway endpoint URL for Prod stage'
     Value:
       Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/
