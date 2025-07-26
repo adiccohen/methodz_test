@@ -1,0 +1,40 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Resources:
+  fieldsEditorService:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: dist/lambda.handler
+      Runtime: nodejs18.x
+      CodeUri: fieldsEditorService
+      MemorySize: 1024
+      Timeout: 11
+      Policies:
+      - AWSLambdaVPCAccessExecutionRole
+      VpcConfig:
+        SubnetIds:
+        - subnet-01b543104f259b807
+        - subnet-02a5ad5f9719cf911
+        - subnet-0a09f3efbedc16fcb
+        SecurityGroupIds:
+        - sg-0e75e4681b171ba0b
+      Environment:
+        Variables:
+          PGUSER: postgres
+          PGPASSWORD: Mta159753!
+          PGHOST: db-methodz.cxq4w2qg41h2.eu-north-1.rds.amazonaws.com
+          PGDATABASE: db-methodz
+          PGPORT: '5432'
+      Events:
+        Api:
+          Type: Api
+          Properties:
+            Path: /{proxy+}
+            Method: ANY
+    Metadata:
+      SamResourceId: fieldsEditorService
+Outputs:
+  fieldsEditorApi:
+    Description: ' API Gateway endpoint URL for Prod stage'
+    Value:
+      Fn::Sub: https://${ServerlessRestApi}.execute-api.${AWS::Region}.amazonaws.com/Prod/
