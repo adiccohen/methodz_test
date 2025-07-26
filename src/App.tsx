@@ -36,7 +36,7 @@ const App = () => {
       <Typography
         variant="h4"
         fontWeight="bold"
-        color="#ff69b4" // Same pink
+        color="#ff69b4"
         textAlign="center"
         sx={{ mt: 3, mb: 2 }}
       >
@@ -50,8 +50,8 @@ const App = () => {
         style={{
           fontSize: 24,
           padding: "6px 16px",
-          backgroundColor: "#f8bbd0", // light pink
-          color: "#880e4f", // darker pink text for contrast
+          backgroundColor: "#f8bbd0", 
+          color: "#880e4f", 
         }}
       >
         +
@@ -68,12 +68,9 @@ const App = () => {
       />
 
       <Box display="flex" gap={3} mt={4}>
-        {/* Left side: Canvas */}
         <Box flex={1}>
           <Canvas fields={fields} />
         </Box>
-
-        {/* Right side: Editor */}
         <Box flex={1}>
           <Editor />
         </Box>

@@ -39,7 +39,6 @@ const Editor = () => {
   const fields = useSelector((state: RootState) => state.fields.fields);
   const [json, setJson] = React.useState("");
 
-  // Convert offsetFrom/offsetTo → start/end for display
   const convertToDisplayJson = (fields: Field[]) =>
     JSON.stringify(
       fields.map((f) => ({
@@ -73,7 +72,6 @@ const Editor = () => {
       dispatch(setFields(normalized));
       dispatch(saveFields(normalized));
     } catch (err) {
-      // ignore invalid JSON while typing
     }
   };
 

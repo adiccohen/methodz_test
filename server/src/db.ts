@@ -5,7 +5,7 @@ console.log({
   password: process.env.PGPASSWORD,
   database: process.env.PGDATABASE,
   port: parseInt(process.env.PGPORT || '5432'),
-  ssl: { rejectUnauthorized: false }, // recommended for RDS
+  ssl: { rejectUnauthorized: false },
 });
 const pool = new Pool({
 
@@ -14,7 +14,7 @@ const pool = new Pool({
   password: process.env.PGPASSWORD,
   database: process.env.PGDATABASE,
   port: parseInt(process.env.PGPORT || '5432'),
-  ssl: { rejectUnauthorized: false }, // recommended for RDS
+  ssl: { rejectUnauthorized: false },
 
 });
 

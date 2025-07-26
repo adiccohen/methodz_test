@@ -1,13 +1,11 @@
 import express from "express";
 import cors from "cors";
 import pool from "./db";
-import serverless from "serverless-http";
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Get all fields
 app.get("/fields", async (req, res) => {
   try {
     const result = await pool.query("SELECT * FROM fields ORDER BY id");
@@ -18,7 +16,7 @@ app.get("/fields", async (req, res) => {
   }
 });
 
-// Save fields (replace all existing)
+
 app.post("/fields", async (req, res) => {
   const fields = req.body;
 
