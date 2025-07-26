@@ -9,6 +9,8 @@ interface Props {
 
 const useStyles = makeStyles({
   fieldPaper: {
+    display: "flex",
+    alignItems: "center",
     padding: 10,
     marginBottom: 8,
   },
@@ -19,6 +21,21 @@ const useStyles = makeStyles({
     padding: 16,
     height: "100%",
   },
+  type: {
+    fontWeight: "bold",
+    marginRight: 12,
+    width: 60,
+    textTransform: "uppercase",
+  },
+  fieldInfo: {
+    display: "flex",
+    flexDirection: "column",
+  },
+  offset: {
+    fontSize: "0.9rem",
+    color: "#555",
+  },
+  
 });
 
 const Canvas: React.FC<Props> = ({ fields }) => {
@@ -28,13 +45,20 @@ const Canvas: React.FC<Props> = ({ fields }) => {
     <Paper elevation={3} className={classes.outerPaper}>
       <Box className={classes.container}>
         <Typography variant="h6">Canvas</Typography>
-        {fields.map((field, index) => (
-          <Paper key={index} className={classes.fieldPaper}>
-            <strong>{field.name}</strong> ({field.type}) | Offset: {field.offsetFrom} - {field.offsetTo}
-            <br />
-            <em>{field.description}</em>
-          </Paper>
-        ))}
+        {fields.map((field, index) => {
+          const length = field.offsetTo - field.offsetFrom + 1;
+          return (
+            <Paper key={index} className={classes.fieldPaper}>
+              <div className={classes.type}>{field.type}</div>
+              <div className={classes.fieldInfo}>
+                <div>
+                  <strong>{field.name}</strong> {field.offsetFrom}:
+                  {field.offsetTo} ({length})
+                </div>
+              </div>
+            </Paper>
+          );
+        })}
       </Box>
     </Paper>
   );
