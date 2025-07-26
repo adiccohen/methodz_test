@@ -1,7 +1,15 @@
 import React from "react";
 import {
-  Dialog, DialogTitle, DialogContent, DialogActions,
-  TextField, Button, FormControl, InputLabel, Select, MenuItem
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  TextField,
+  Button,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
 } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { Formik, Form } from "formik";
@@ -36,7 +44,12 @@ const AddFieldModal: React.FC<Props> = ({ open, onClose, onAdd }) => {
           description: "",
         }}
         onSubmit={(values, { resetForm }) => {
-          onAdd(values);
+          const parsedField = {
+            ...values,
+            offsetFrom: Number(values.offsetFrom),
+            offsetTo: Number(values.offsetTo),
+          };
+          onAdd(parsedField);
           resetForm();
           onClose();
         }}
@@ -52,9 +65,18 @@ const AddFieldModal: React.FC<Props> = ({ open, onClose, onAdd }) => {
                 value={values.name}
                 onChange={handleChange}
               />
-              <FormControl fullWidth margin="dense" className={classes.formControl}>
+              <FormControl
+                fullWidth
+                margin="dense"
+                className={classes.formControl}
+              >
                 <InputLabel>Type</InputLabel>
-                <Select name="type" value={values.type} onChange={handleChange} label="Type">
+                <Select
+                  name="type"
+                  value={values.type}
+                  onChange={handleChange}
+                  label="Type"
+                >
                   <MenuItem value="string">String</MenuItem>
                   <MenuItem value="num">Num</MenuItem>
                 </Select>

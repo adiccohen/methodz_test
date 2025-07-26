@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState, AppDispatch } from "../../../app/store";
 import { saveFields } from "../fieldsThunks";
 import { setFields } from "../fieldsSlice";
+import { Field } from "../fieldsSlice";
 
 const useStyles = makeStyles({
   editorContainer: {
@@ -36,20 +37,43 @@ const Editor = () => {
   const classes = useStyles();
   const dispatch = useDispatch<AppDispatch>();
   const fields = useSelector((state: RootState) => state.fields.fields);
-  const [json, setJson] = React.useState(JSON.stringify(fields, null, 2));
+  const [json, setJson] = React.useState("");
+
+  // Convert offsetFrom/offsetTo → start/end for display
+  const convertToDisplayJson = (fields: Field[]) =>
+    JSON.stringify(
+      fields.map((f) => ({
+        name: f.name,
+        type: f.type,
+        start: f.offsetFrom,
+        end: f.offsetTo,
+        description: f.description,
+      })),
+      null,
+      2
+    );
 
   React.useEffect(() => {
-    setJson(JSON.stringify(fields, null, 2));
+    setJson(convertToDisplayJson(fields));
   }, [fields]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setJson(e.target.value);
+    const newJson = e.target.value;
+    setJson(newJson);
     try {
-      const parsed = JSON.parse(e.target.value);
-      dispatch(setFields(parsed));
-      dispatch(saveFields(parsed));
+      const parsed = JSON.parse(newJson);
+      const normalized: Field[] = parsed.map((f: any) => ({
+        name: f.name,
+        type: f.type,
+        offsetFrom: f.start ?? 0,
+        offsetTo: f.end ?? 0,
+        description: f.description || "",
+      }));
+
+      dispatch(setFields(normalized));
+      dispatch(saveFields(normalized));
     } catch (err) {
-      // Ignore invalid JSON while typing
+      // ignore invalid JSON while typing
     }
   };
 
