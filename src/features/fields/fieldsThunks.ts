@@ -1,4 +1,4 @@
-// src/features/fields/fieldsThunks.ts
+
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { Field } from "./fieldsSlice";
 import { fetchFieldsFromApi, saveFieldsToApi } from "../../api/fieldsApi";

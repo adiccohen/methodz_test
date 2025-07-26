@@ -8,7 +8,6 @@ import AddFieldModal from "./features/fields/components/AddFieldModal";
 import Canvas from "./features/fields/components/Canvas";
 import Editor from "./features/fields/components/Editor";
 import { makeStyles } from "@mui/styles";
-import AddIcon from "@mui/icons-material/Add";
 
 const useStyles = makeStyles({
   root: {
@@ -34,7 +33,13 @@ const App = () => {
 
   return (
     <Box className={classes.root}>
-      <Typography variant="h4" className={classes.header} gutterBottom>
+      <Typography
+        variant="h4"
+        fontWeight="bold"
+        color="#ff69b4" // Same pink
+        textAlign="center"
+        sx={{ mt: 3, mb: 2 }}
+      >
         Header Analysis
       </Typography>
 

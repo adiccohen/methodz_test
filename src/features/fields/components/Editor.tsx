@@ -12,6 +12,23 @@ const useStyles = makeStyles({
   },
   paper: {
     padding: 10,
+    height: 400,
+    display: "flex",
+    flexDirection: "column",
+  },
+  textField: {
+    flexGrow: 1,
+    "& .MuiOutlinedInput-root": {
+      height: "100%",
+      alignItems: "flex-start",
+    },
+    "& .MuiInputBase-inputMultiline": {
+      overflow: "auto !important",
+      height: "100% !important",
+    },
+    "& textarea": {
+      overflow: "auto",
+    },
   },
 });
 
@@ -32,7 +49,7 @@ const Editor = () => {
       dispatch(setFields(parsed));
       dispatch(saveFields(parsed));
     } catch (err) {
-      // Ignore invalid JSON
+      // Ignore invalid JSON while typing
     }
   };
 
@@ -43,10 +60,10 @@ const Editor = () => {
         <TextField
           multiline
           fullWidth
-          minRows={10}
           value={json}
           onChange={handleChange}
           variant="outlined"
+          className={classes.textField}
         />
       </Paper>
     </Box>
